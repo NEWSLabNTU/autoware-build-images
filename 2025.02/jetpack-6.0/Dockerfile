@@ -26,4 +26,21 @@ RUN apt install -y openssh-server
 # Install required dependencies to build Debian packages
 RUN apt install -y parallel fakeroot debhelper dh-python rsync
 
+# Install git and other prerequisites for Autoware setup
+RUN apt update && apt install -y git curl wget
+
+# Clone Autoware repository and checkout 2025.02 tag
+RUN git clone https://github.com/autowarefoundation/autoware.git /tmp/autoware && \
+    cd /tmp/autoware && \
+    git checkout 2025.02
+
+# Run Autoware Ansible setup script
+# Note: Using the setup script from the 2025.02 version
+# For Jetpack, we skip CUDA drivers as they are included in the base image
+RUN cd /tmp/autoware && \
+    ./setup-dev-env.sh -y --download-artifacts --no-cuda-drivers --runtime
+
+# Clean up the cloned Autoware repository
+RUN rm -rf /tmp/autoware
+
 CMD ["/bin/bash"]
