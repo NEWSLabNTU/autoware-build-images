@@ -13,11 +13,16 @@ These Docker images are pre-configured build environments for creating Debian pa
 
 ## Available Images
 
-The repository provides Dockerfiles for different platforms:
+The repository provides Dockerfiles for different platforms and Autoware versions:
 
+### Platforms
 - **amd64** - Standard x86_64 architecture
 - **arm64** - ARM 64-bit architecture
-- **jetpack** - NVIDIA Jetson platforms with CUDA/TensorRT support
+- **jetpack-6.0** - NVIDIA Jetson platforms with CUDA/TensorRT support
+
+### Versions
+- **2025.02** - Autoware 2025.02 release
+- **0.45.1** - Autoware 0.45.1 release
 
 ## Usage
 
@@ -36,7 +41,11 @@ To use these images with colcon2deb:
 3. **Reference in your config.yaml**:
    ```yaml
    docker:
+     # For Autoware 2025.02
      dockerfile: ./docker/2025.02/amd64/Dockerfile
+     
+     # For Autoware 0.45.1
+     # dockerfile: ./docker/0.45.1/amd64/Dockerfile
    ```
 
 ## Direct Repository Access
