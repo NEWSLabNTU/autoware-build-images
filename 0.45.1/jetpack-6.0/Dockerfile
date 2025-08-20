@@ -60,6 +60,18 @@ RUN rosdep init || true && \
 # Install Ansible first (required by Autoware setup script)
 RUN apt-get install -y ansible
 
+# Add NVIDIA L4T APT sources for Jetpack-specific packages
+RUN apt-key adv --fetch-key http://repo.download.nvidia.com/jetson/jetson-ota-public.asc && \
+    echo "deb https://repo.download.nvidia.com/jetson/common r36.3 main" > /etc/apt/sources.list.d/nvidia-l4t-apt-source.list && \
+    echo "deb https://repo.download.nvidia.com/jetson/t234 r36.3 main" >> /etc/apt/sources.list.d/nvidia-l4t-apt-source.list && \
+    echo "deb https://repo.download.nvidia.com/jetson/ffmpeg r36.3 main" >> /etc/apt/sources.list.d/nvidia-l4t-apt-source.list && \
+    mkdir -p /opt/nvidia/l4t-packages && \
+    touch /opt/nvidia/l4t-packages/.nv-l4t-disable-boot-fw-update-in-preinstall && \
+    apt-get update -y
+
+# Install NVIDIA L4T DLA compiler (required for Jetpack builds)
+RUN apt-get install -o DPkg::Options::="--force-confold" -y nvidia-l4t-dla-compiler
+
 # Clone Autoware repository and run setup
 # Note: For 0.45.1, the setup script doesn't support --ros-version flag
 # For Jetpack, we skip CUDA drivers as they are included in the base image
